@@ -1,4 +1,5 @@
 import Image from "next/image";
+
 import {
   Card,
   CardContent,
@@ -102,8 +103,8 @@ export default function Dashboard() {
       </div>
       <p className=" mb-4">Here are some suggestions, of what you can do:</p>
       <div className="grid w-fit grid-cols-3 gap-4">
-        {actions.map((action) => (
-          <Card className=" max-w-sm bg-neutral-800 text-white">
+        {actions.map((action, index) => (
+          <Card key={index} className=" max-w-sm bg-neutral-800 text-white">
             <CardHeader>
               <CardTitle>{action.title}</CardTitle>
               <CardDescription>{action.description}</CardDescription>

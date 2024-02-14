@@ -54,11 +54,44 @@ const actions = [
   },
 ];
 
+function timeBetween(time: any, past: any, before: any) {
+  const currentTime = new Date();
+  const pastTime = new Date(currentTime.toDateString() + " " + past);
+  const beforeTime = new Date(currentTime.toDateString() + " " + before);
+
+  if (currentTime >= pastTime && currentTime < beforeTime) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function greeting() {
+  const currentTime = new Date();
+  const time = currentTime.getHours() + ":" + currentTime.getMinutes();
+
+  if (timeBetween(time, "00:00", "06:00")) {
+    return "Good Night";
+  } else if (timeBetween(time, "06:00", "12:00")) {
+    return "Good Morning";
+  } else if (timeBetween(time, "12:00", "14:00")) {
+    return "Good Afternoon";
+  } else if (timeBetween(time, "14:00", "18:00")) {
+    return "Hello";
+  } else if (timeBetween(time, "18:00", "22:00")) {
+    return "Good Evening";
+  } else if (timeBetween(time, "22:00", "23:59")) {
+    return "Good Night";
+  }
+}
+
 export default function Dashboard() {
   return (
     <>
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Good Evening, Username!</h1>
+        <h1 className="text-2xl font-bold">
+          {greeting()}, {user.name}!
+        </h1>
         <Image
           className=" rounded-full shadow-md"
           src={user.avatar}

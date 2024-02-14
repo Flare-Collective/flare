@@ -1,57 +1,45 @@
 import { unstable_noStore as noStore } from "next/cache";
+import { cookies } from "next/headers";
 import Link from "next/link";
-import { api } from "~/trpc/server";
+import { Button } from "~/components/ui/button";
+import { createClient } from "~/lib/supabase/server";
+import { logout } from "./actions";
+import Image from "next/image";
 
 export default async function Home() {
   noStore();
-  const hello = await api.post.hello.query({ text: "from tRPC" });
+
+  const cookieStore = cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data, error } = await supabase.auth.getUser();
+
+  if (error || !data?.user) {
+    console.log("not logged in, show different state");
+  }
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
-      <div className="container flex flex-col items-center justify-center gap-12 px-4 py-16 ">
-        <h1 className="text-5xl font-extrabold tracking-tight sm:text-[5rem]">
-          Create <span className="text-[hsl(280,100%,70%)]">T3</span> App
-        </h1>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-8">
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-            href="https://create.t3.gg/en/usage/first-steps"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">First Steps →</h3>
-            <div className="text-lg">
-              Just the basics - Everything you need to know to set up your
-              database and authentication.
-            </div>
-          </Link>
-          <Link
-            className="flex max-w-xs flex-col gap-4 rounded-xl bg-white/10 p-4 hover:bg-white/20"
-            href="https://create.t3.gg/en/introduction"
-            target="_blank"
-          >
-            <h3 className="text-2xl font-bold">Documentation →</h3>
-            <div className="text-lg">
-              Learn more about Create T3 App, the libraries it uses, and how to
-              deploy it.
-            </div>
-          </Link>
+      {data.user ? (
+        <div>
+          <p>id: {data.user.id}</p>
+          <p>name: {data.user.user_metadata.user_name}</p>
+          <Image
+            src={data.user.user_metadata.avatar_url as string}
+            className="h-8 w-8 rounded-full"
+            alt={`${data.user.user_metadata.user_name} avtar`}
+            height={32}
+            width={32}
+          />
+          <form>
+            <Button formAction={logout}>Log out</Button>
+          </form>
         </div>
-        <div className="flex flex-col items-center gap-2">
-          <p className="text-2xl text-white">
-            {hello ? hello.greeting : "Loading tRPC query..."}
-          </p>
-        </div>
-
-        <CrudShowcase />
-      </div>
+      ) : (
+        <Button asChild>
+          <Link href="/auth/login">Log in</Link>
+        </Button>
+      )}
     </main>
-  );
-}
-
-async function CrudShowcase() {
-  return (
-    <div className="w-full max-w-xs">
-      <p>You have no posts yet.</p>
-    </div>
   );
 }

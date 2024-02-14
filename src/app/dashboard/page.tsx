@@ -55,7 +55,7 @@ const actions = [
   },
 ];
 
-function timeBetween(time: any, past: any, before: any) {
+function timeBetween(past: string, before: string) {
   const currentTime = new Date();
   const pastTime = new Date(currentTime.toDateString() + " " + past);
   const beforeTime = new Date(currentTime.toDateString() + " " + before);
@@ -68,20 +68,17 @@ function timeBetween(time: any, past: any, before: any) {
 }
 
 function greeting() {
-  const currentTime = new Date();
-  const time = currentTime.getHours() + ":" + currentTime.getMinutes();
-
-  if (timeBetween(time, "00:00", "06:00")) {
+  if (timeBetween("00:00", "06:00")) {
     return "Good Night";
-  } else if (timeBetween(time, "06:00", "12:00")) {
+  } else if (timeBetween("06:00", "12:00")) {
     return "Good Morning";
-  } else if (timeBetween(time, "12:00", "14:00")) {
+  } else if (timeBetween("12:00", "14:00")) {
     return "Good Afternoon";
-  } else if (timeBetween(time, "14:00", "18:00")) {
+  } else if (timeBetween("14:00", "18:00")) {
     return "Hello";
-  } else if (timeBetween(time, "18:00", "22:00")) {
+  } else if (timeBetween("18:00", "22:00")) {
     return "Good Evening";
-  } else if (timeBetween(time, "22:00", "23:59")) {
+  } else if (timeBetween("22:00", "23:59")) {
     return "Good Night";
   }
 }

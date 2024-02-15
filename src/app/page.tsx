@@ -1,4 +1,3 @@
-import { unstable_noStore as noStore } from "next/cache";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
@@ -7,14 +6,12 @@ import { logout } from "./actions";
 import Image from "next/image";
 
 export default async function Home() {
-  noStore();
-
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
   const { data, error } = await supabase.auth.getUser();
 
-  if (error || !data?.user) {
+  if (error ?? !data?.user) {
     console.log("not logged in, show different state");
   }
 
